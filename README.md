@@ -26,18 +26,18 @@ We provide entrypoint script in docker image that manages etcd node startup. It 
 
 Sequence:
 
-1. Try to start etcd and join static cluster as it is new cluster (`ETCD_INITIAL_CLUSTER_STATE=new`)
+1. Try to start etcd and join static cluster as it is new cluster (`export ETCD_INITIAL_CLUSTER_STATE=new`)
 2. If previous step failed then try to remove from cluster previous member with the same name (`ETCD_NAME=xxx`)
 3. Try to add to cluster new member with its name (`ETCD_NAME=xxx`)
 4. Cleanup data dir (`rm -rf ./${ETCD_NAME}.etcd/*`)
-5. Setup proper environment variables for joining existing cluster (`unset ETCD_INITIAL_CLUSTER_TOKEN` `ETCD_INITIAL_CLUSTER_STATE=existing`)
+5. Setup proper environment variables for joining existing cluster (`unset ETCD_INITIAL_CLUSTER_TOKEN`, `export ETCD_INITIAL_CLUSTER_STATE=existing`)
 6. Try to start etcd and join static cluster as it is existing cluster (`ETCD_INITIAL_CLUSTER_STATE=existing`)
 
 ## Usage
 
-Configuration should be passed via environment variables. All standard `ETCD_*` environment variables are supported [documentation](https://coreos.com/etcd/docs/latest/configuration.html).
+Configuration should be passed via environment variables. All standard `ETCD_*` environment variables are supported ([documentation](https://coreos.com/etcd/docs/latest/configuration.html)).
 
-Only [etcd static clusters](https://coreos.com/etcd/docs/latest/clustering.html#static) are supported. So `ETCD_INITIAL_CLUSTER` environment variable should be set properly. `ETCD_INITIAL_CLUSTER_STATE` will be ignored (overriden by entrypoint script).
+Only [etcd static clusters](https://coreos.com/etcd/docs/latest/clustering.html#static) are supported. So `ETCD_INITIAL_CLUSTER` environment variable should be set properly. On the other hand `ETCD_INITIAL_CLUSTER_STATE` will be ignored (overriden by entrypoint script).
 
 Additionally there should be set `ETCD_OTHER_PEERS_CLIENT_URLS` custom environment variable to point each instance to other instances client urls. This is used for 'cleaning' membership (removing/adding members with the same name). 
 
